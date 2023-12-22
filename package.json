@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "next build",
+    "compose": "docker-compose up -d --force-recreate",
     "db:push": "prisma db push",
     "db:studio": "prisma studio",
     "dev": "next dev",
@@ -25,6 +26,7 @@
     "next-auth": "^4.24.5",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "redis": "^4.6.12",
     "server-only": "^0.0.1",
     "superjson": "^2.2.1",
     "zod": "^3.22.4"

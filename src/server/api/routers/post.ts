@@ -39,4 +39,32 @@ export const postRouter = createTRPCRouter({
   getSecretMessage: protectedProcedure.query(() => {
     return "you can now see this secret message!";
   }),
+
+  getFromCache: publicProcedure
+    .input(
+      z.object({
+        key: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      await ctx.redis.connect();
+      const value = await ctx.redis.get(input.key);
+      await ctx.redis.quit();
+      return value;
+    }),
+
+  setCacheItem: publicProcedure
+    .input(
+      z.object({
+        key: z.string(),
+        value: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      await ctx.redis.connect();
+      await ctx.redis.set(input.key, input.value);
+      const value = await ctx.redis.get(input.key);
+      await ctx.redis.quit();
+      return value;
+    }),
 });

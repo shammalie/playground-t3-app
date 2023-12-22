@@ -3,6 +3,7 @@ import Link from "next/link";
 import { CreatePost } from "~/app/_components/create-post";
 import { getServerAuthSession } from "~/server/auth";
 import { api } from "~/trpc/server";
+import { CreateCacheItem } from "./_components/create-cache-item";
 
 export default async function Home() {
   const hello = await api.post.hello.query({ text: "from tRPC" });
@@ -57,9 +58,27 @@ export default async function Home() {
         </div>
 
         <CrudShowcase />
+        <RedisShowcase />
       </div>
     </main>
   );
+}
+
+async function RedisShowcase() {
+  const latestItem = await api.post.getFromCache.query({
+    key: "test"
+  })
+  return (
+    <div className="w-full max-w-xs">
+      {latestItem ? (
+        <p className="truncate">Cached item: {latestItem}</p>
+      ) : (
+        <p>No items found in cache.</p>
+      )}
+      <CreateCacheItem />
+
+    </div>
+  )
 }
 
 async function CrudShowcase() {
