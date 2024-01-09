@@ -4,6 +4,7 @@ import { CreatePost } from "~/app/_components/create-post";
 import { getServerAuthSession } from "~/server/auth";
 import { api } from "~/trpc/server";
 import { CreateCacheItem } from "./_components/create-cache-item";
+import { TestSubscriptions } from "./_components/test-subscription";
 
 export default async function Home() {
   const hello = await api.post.hello.query({ text: "from tRPC" });
@@ -57,8 +58,18 @@ export default async function Home() {
           </div>
         </div>
 
-        <CrudShowcase />
-        <RedisShowcase />
+        <TestSubscriptions />
+
+        <div className="flex gap-10">
+          <div className="rounded-xl bg-white/10 p-4">
+            <h2 className="text-2xl font-semibold">CRUD Showcase</h2>
+            <CrudShowcase />
+          </div>
+          <div className="rounded-xl bg-white/10 p-4">
+            <h2 className="text-2xl font-semibold">Redis Showcase</h2>
+            <RedisShowcase />
+          </div>
+        </div>
       </div>
     </main>
   );
@@ -66,8 +77,8 @@ export default async function Home() {
 
 async function RedisShowcase() {
   const latestItem = await api.post.getFromCache.query({
-    key: "test"
-  })
+    key: "test",
+  });
   return (
     <div className="w-full max-w-xs">
       {latestItem ? (
@@ -76,9 +87,8 @@ async function RedisShowcase() {
         <p>No items found in cache.</p>
       )}
       <CreateCacheItem />
-
     </div>
-  )
+  );
 }
 
 async function CrudShowcase() {

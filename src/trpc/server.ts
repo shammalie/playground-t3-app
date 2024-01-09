@@ -12,15 +12,15 @@ import { cookies } from "next/headers";
 import { cache } from "react";
 
 import { appRouter, type AppRouter } from "~/server/api/root";
-import { createTRPCContext } from "~/server/api/trpc";
+import { createContext } from "~/server/api/trpc";
 import { transformer } from "./shared";
 
 /**
  * This wraps the `createTRPCContext` helper and provides the required context for the tRPC API when
  * handling a tRPC call from a React Server Component.
  */
-const createContext = cache(() => {
-  return createTRPCContext({
+const createTRPCContext = cache(() => {
+  return createContext({
     headers: new Headers({
       cookie: cookies().toString(),
       "x-trpc-source": "rsc",
@@ -43,7 +43,7 @@ export const api = createTRPCProxyClient<AppRouter>({
     () =>
       ({ op }) =>
         observable((observer) => {
-          createContext()
+          createTRPCContext()
             .then((ctx) => {
               return callProcedure({
                 procedures: appRouter._def.procedures,

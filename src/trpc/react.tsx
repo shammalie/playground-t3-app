@@ -1,7 +1,12 @@
 "use client";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { loggerLink, unstable_httpBatchStreamLink } from "@trpc/client";
+import {
+  createWSClient,
+  loggerLink,
+  unstable_httpBatchStreamLink,
+  wsLink,
+} from "@trpc/client";
 import { createTRPCReact } from "@trpc/react-query";
 import { useState } from "react";
 
@@ -9,6 +14,10 @@ import { type AppRouter } from "~/server/api/root";
 import { getUrl, transformer } from "./shared";
 
 export const api = createTRPCReact<AppRouter>();
+
+const client = createWSClient({
+  url: "ws://127.0.0.1:3001/ws",
+});
 
 export function TRPCReactProvider(props: {
   children: React.ReactNode;
@@ -34,8 +43,11 @@ export function TRPCReactProvider(props: {
             };
           },
         }),
+        wsLink<AppRouter>({
+          client,
+        }),
       ],
-    })
+    }),
   );
 
   return (

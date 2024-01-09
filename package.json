@@ -9,6 +9,7 @@
     "db:push": "prisma db push",
     "db:studio": "prisma studio",
     "dev": "next dev",
+    "dev:wss": "cross-env PORT=3001 SKIP_ENV_VALIDATION=true tsx watch src/server/wsServer.ts",
     "postinstall": "prisma generate",
     "lint": "next lint",
     "start": "next start"
@@ -22,6 +23,7 @@
     "@trpc/next": "^10.43.6",
     "@trpc/react-query": "^10.43.6",
     "@trpc/server": "^10.43.6",
+    "cross-env": "^7.0.3",
     "next": "^14.0.3",
     "next-auth": "^4.24.5",
     "react": "18.2.0",
@@ -29,6 +31,8 @@
     "redis": "^4.6.12",
     "server-only": "^0.0.1",
     "superjson": "^2.2.1",
+    "tsx": "^4.7.0",
+    "ws": "^8.15.1",
     "zod": "^3.22.4"
   },
   "devDependencies": {
@@ -37,6 +41,7 @@
     "@types/node": "^18.17.0",
     "@types/react": "^18.2.37",
     "@types/react-dom": "^18.2.15",
+    "@types/ws": "^8.5.10",
     "@typescript-eslint/eslint-plugin": "^6.11.0",
     "@typescript-eslint/parser": "^6.11.0",
     "autoprefixer": "^10.4.14",

@@ -13,7 +13,13 @@ import { ZodError } from "zod";
 
 import { getServerAuthSession } from "~/server/auth";
 import { db } from "~/server/db";
-import { redis } from "../cache";
+import { redis } from "~/server/cache";
+import EventEmitter from "events";
+
+import { type NodeHTTPCreateContextFnOptions,} from "@trpc/server/adapters/node-http";
+import { type IncomingMessage } from "http";
+import { type WebSocket } from "ws";
+import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
 
 /**
  * 1. CONTEXT
@@ -27,7 +33,7 @@ import { redis } from "../cache";
  *
  * @see https://trpc.io/docs/server/context
  */
-export const createTRPCContext = async (opts: { headers: Headers }) => {
+export const createContext = async (opts: {headers: Headers} | NodeHTTPCreateContextFnOptions<IncomingMessage, WebSocket> | CreateNextContextOptions) => {
   const session = await getServerAuthSession();
 
   return {
@@ -37,7 +43,6 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
     ...opts,
   };
 };
-
 /**
  * 2. INITIALIZATION
  *
@@ -45,7 +50,7 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
  * ZodErrors so that you get typesafety on the frontend if your procedure fails due to validation
  * errors on the backend.
  */
-const t = initTRPC.context<typeof createTRPCContext>().create({
+const t = initTRPC.context<typeof createContext>().create({
   transformer: superjson,
   errorFormatter({ shape, error }) {
     return {
@@ -71,6 +76,9 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
  *
  * @see https://trpc.io/docs/router
  */
+
+export const ee = new EventEmitter();
+
 export const createTRPCRouter = t.router;
 
 /**
