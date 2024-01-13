@@ -9,7 +9,7 @@
     "db:push": "prisma db push",
     "db:studio": "prisma studio",
     "dev": "next dev",
-    "dev:wss": "cross-env PORT=3001 SKIP_ENV_VALIDATION=true tsx watch src/server/wsServer.ts",
+    "dev:wss": "cross-env PORT=3001 SKIP_ENV_VALIDATION=true tsx watch src/server/wsServer.ts --tsconfig tsconfig.server.json ",
     "postinstall": "prisma generate",
     "lint": "next lint",
     "start": "next start"
